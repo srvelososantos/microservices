@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -22,19 +23,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
       autoLoadEntities: true
     }),
-    ClientsModule.register([
-      {
-        name: 'PEDIDOS_SERVICE', // Nome para injeção de dependência
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://guest:guest@localhost:5672'],
-          queue: 'fila_pedidos', // Nome da fila
-          queueOptions: {
-            durable: false
-          },
-        },
-      },
-    ]),
     BudgetsheetModule,
     PurchaseModule,
     SupplierModule,

@@ -1,44 +1,44 @@
-import { EventSubscriber, EntitySubscriberInterface, UpdateEvent, DataSource } from 'typeorm';
-import { Inject } from '@nestjs/common';
+import { EntitySubscriberInterface, UpdateEvent, DataSource } from 'typeorm';
+import { Machine } from './entities/machine.entity';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Machine } from './entities/machine.entity'; // Sua entidade
+import { ModuleRef } from '@nestjs/core';
 
-@EventSubscriber()
-export class MachineSubscriber implements EntitySubscriberInterface<Machine> {
+@Injectable()
+export class MachineSubscriber implements EntitySubscriberInterface<Machine>, OnModuleInit {
   
-  // Injete o RabbitMQ aqui (talvez precise usar ModuleRef se der erro de dependência circular)
+  private client: ClientProxy;
+
   constructor(
-    dataSource: DataSource,
-    @Inject('SERVICES_SERVICE') private readonly client: ClientProxy
-  ) {
-    dataSource.subscribers.push(this);
+    private readonly dataSource: DataSource,
+    private readonly moduleRef: ModuleRef,
+  ) {}
+
+  onModuleInit() {
+    // Registrar o subscriber no datasource AQUI (dataSource já está pronto)
+    this.dataSource.subscribers.push(this);
+
+    this.client = this.moduleRef.get<ClientProxy>('SERVICES_SERVICE', { strict: false });
   }
 
-  // Diz ao TypeORM: "Escute apenas a entidade Machine"
   listenTo() {
     return Machine;
   }
 
-  // Esse método roda DEPOIS de qualquer update no banco
   async afterUpdate(event: UpdateEvent<Machine>) {
-    if (!event.entity || !event.databaseEntity) {
-      return;
-    }
-    // O TypeORM te dá o objeto 'entity' (novo) e o 'databaseEntity' (antigo, como estava no banco)
-    
+    if (!event.entity || !event.databaseEntity) return;
+
     const novoStatus = event.entity.status;
     const statusAntigo = event.databaseEntity.status;
 
-    // Lógica de detecção de mudança
     if (statusAntigo !== 'quebrado' && novoStatus === 'quebrado') {
-       
-       console.log(`[Subscriber] Detectada quebra na máquina ${event.entity.id}`);
-       
-       // Dispara a mensagem (Lembre do .subscribe() ou lastValueFrom)
-       this.client.emit('queue_services', { 
-         id: event.entity.id, 
-         status: 'CRITICAL_FAILURE' 
-       }).subscribe();
+
+      console.log(`[Subscriber] Detectada quebra: ${event.entity.id}`);
+
+      this.client.emit('queue_services', {
+        id: event.entity.id,
+        status: 'CRITICAL_FAILURE'
+      }).subscribe();
     }
   }
 }

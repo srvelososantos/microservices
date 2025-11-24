@@ -8,6 +8,7 @@ import { ProfessionalModule } from './professional/professional.module';
 import { MachineModule } from './machine/machine.module';
 import { DiaryModule } from './diary/diary.module';
 import { RabbitMqModule } from './rabbitmq.module';
+import { MachineSubscriber } from './machine/machine.subscriber';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { RabbitMqModule } from './rabbitmq.module';
       username: 'root',
       password: 'rootpassword',
       synchronize: true,
-      autoLoadEntities: true
+      autoLoadEntities: true,
+      subscribers: [MachineSubscriber]
     }),
     ProfessionalModule,
     MachineModule,
@@ -29,6 +31,6 @@ import { RabbitMqModule } from './rabbitmq.module';
     RabbitMqModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MachineSubscriber],
 })
 export class AppModule {}

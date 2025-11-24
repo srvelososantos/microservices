@@ -2,10 +2,20 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PurchaseService } from './purchase.service';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
+import { EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller('purchase')
 export class PurchaseController {
   constructor(private readonly purchaseService: PurchaseService) {}
+
+  @EventPattern('queue_services')
+  async handleMachineBreak(@Payload() data: any){
+    console.log(`rabbitmq avisou: Chegou maquina quebrada ${data}`)
+
+    //criar nova compra e coloca-la como pendente
+    
+    console.log(`servico ${data} aguardando para ser realizado`)
+  }
 
   @Post()
   create(@Body() createPurchaseDto: CreatePurchaseDto) {
