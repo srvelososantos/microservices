@@ -1,11 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from './entities/request.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RequestService {
-  create(createRequestDto: CreateRequestDto) {
-    return 'This action adds a new request';
+
+  constructor(
+    @InjectRepository(Request)
+    private readonly requestRepository: Repository<Request>,
+  )
+  {}
+  async create(createRequestDto: CreateRequestDto) {
+    const createdNotification = this.requestRepository.create({
+      ...createRequestDto
+    });
+    await this.requestRepository.save(createdNotification);
+    return createdNotification;
   }
 
   findAll() {

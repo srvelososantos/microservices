@@ -1,7 +1,0 @@
-version: '3.8'
-services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"   # Porta de comunicação
-      - "15672:15672" # Painel de administração (user: guest, pass: guest)

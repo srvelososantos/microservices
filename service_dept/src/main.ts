@@ -9,7 +9,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://guest:guest@localhost:5672'],
-      queue: 'queue_supervision',
+      queue: 'queue_supervision', // fila para se conectar a uma determinada fila e receber mensagens enviadas a ela (consumidor)
       queueOptions: { durable: false },
     },
   });

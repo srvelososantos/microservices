@@ -21,14 +21,16 @@ export class AppController {
   }
 
   @EventPattern('notification_created')
-  async processNotification(@Payload() data: { id: number, endereco: string, fonte: string, multa: string, prazo: string }){
-    console.log(`rabbitmq avisou: Chegou notificacao ${data.endereco}`)
+  async processNotification(@Payload() data: number){
+    console.log(`rabbitmq avisou: Chegou notificacao ${data}`)
 
     //criar novo serviço e coloca-lo como pendente
 
     
-    console.log(`servico ${data.endereco} aguardando para ser realizado`)
+    console.log(`servico ${data} aguardando para ser realizado`)
   }
+
+  
 
   //na execuçao dos serviços
   //if maquina status ocupada, entao colocar em uma fila que tenta executar a cada 5 segundos

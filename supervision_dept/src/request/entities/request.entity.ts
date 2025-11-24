@@ -24,6 +24,6 @@ export class Request {
     @Column()
     status: 'pending' | 'done'
 
-    @ManyToOne(() => Supervisor, (supervisor) => supervisor.request, { eager: true })
+    @ManyToOne(() => Supervisor, (supervisor) => supervisor.request)
     supervisor: Supervisor[]
 }

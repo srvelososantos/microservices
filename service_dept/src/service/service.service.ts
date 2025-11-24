@@ -1,26 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { CreateServiceDto } from './dto/create-service.dto';
-import { UpdateServiceDto } from './dto/update-service.dto';
+import { Injectable, Logger } from '@nestjs/common';
+import { JobSheetFactory } from './factory/job-sheet.factory';
 
 @Injectable()
 export class ServiceService {
-  create(createServiceDto: CreateServiceDto) {
-    return 'This action adds a new service';
-  }
+  private readonly logger = new Logger(ServiceService.name);
 
-  findAll() {
-    return `This action returns all service`;
-  }
+  constructor(private jobSheetFactory: JobSheetFactory) {}
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
-  }
+  handlePurchaseCreated(purchaseData: any) {
+    this.logger.log(`Nova compra recebida via RabbitMQ: ${JSON.stringify(purchaseData)}`);
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
-  }
+    const ficha = this.jobSheetFactory.createJobSheet(purchaseData);
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+    this.logger.log(`Ficha criada: ${ficha.description} | Prioridade: ${ficha.priority}`);
+    this.logger.log(`Instruções: ${ficha.generateInstructions()}`);
+    
+    // this.repository.save(ficha);
   }
 }

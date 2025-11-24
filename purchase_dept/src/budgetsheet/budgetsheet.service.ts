@@ -1,9 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBudgetsheetDto } from './dto/create-budgetsheet.dto';
 import { UpdateBudgetsheetDto } from './dto/update-budgetsheet.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BudgetSheet } from './entities/budgetsheet.entity';
 
 @Injectable()
 export class BudgetsheetService {
+
+  constructor(
+    @InjectRepository(BudgetSheet)
+    private repo: Repository<BudgetSheet> // <--- Note o tipo genérico
+  ) {}
+
+
   create(createBudgetsheetDto: CreateBudgetsheetDto) {
     return 'This action adds a new budgetsheet';
   }

@@ -4,7 +4,10 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService, @Inject('NOTIFICATIONS_SERVICE') private readonly client: ClientProxy) {}
+  constructor(private readonly appService: AppService, 
+    @Inject('NOTIFICATIONS_SERVICE') private readonly client: ClientProxy,
+    
+  ) {}
 
   @Get()
   getHello(): string {
@@ -12,8 +15,11 @@ export class AppController {
   }
 
   @Post()
-  realizarNotificacao(@Body() notification: {id, endereco, fonte, multa, prazo}){
+  realizarNotificacao(@Body() notification: any){
+    
+    
     this.client.emit('notification_created', notification);
-    return { message: `notificacao processada, ${notification.endereco}` };
+
+    return { message: `notificacao processada, ${notification}` };
   }
 }
