@@ -9,10 +9,13 @@ import { MachineModule } from './machine/machine.module';
 import { DiaryModule } from './diary/diary.module';
 import { RabbitMqModule } from './rabbitmq.module';
 import { MachineSubscriber } from './machine/machine.subscriber';
-import { JobSheetModule } from './service/factory/job-sheet.module';
+import { JobModule } from './service/factory/job.module';
+import { MachineFactory } from './service/factory/machine.factory';
+import { Service } from './service/entities/service.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Service]),
     ServiceModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
@@ -30,9 +33,9 @@ import { JobSheetModule } from './service/factory/job-sheet.module';
     MachineModule,
     DiaryModule,
     RabbitMqModule,
-    JobSheetModule
+    JobModule
   ],
   controllers: [AppController],
-  providers: [AppService, MachineSubscriber],
+  providers: [AppService, MachineSubscriber, MachineFactory, ]
 })
 export class AppModule {}

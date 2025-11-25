@@ -14,4 +14,7 @@ export class CreatePurchaseDto {
     @IsNumber()
     estimated_price: number;
 
+    @IsString()
+    description: string;
+
 }

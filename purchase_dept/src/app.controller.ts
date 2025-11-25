@@ -1,23 +1,22 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
+import { PurchaseService } from 'strategies/purchase.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService ) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  constructor(
+    private readonly appService: PurchaseService
+  ) {}
 
   @EventPattern('notification_created')
-  async processNotification(@Payload() data: any){
-    console.log(`rabbitmq avisou: Chegou notificacao ${data}`)
+  async processNotification(@Payload() job: any){
+    const { estimated_price, description } = job;
+    setTimeout(() => {
+      this.appService.handleNewPurchaseRequest(estimated_price, description)
+    }, 4000); // 4000 milliseconds = 2 seconds
 
-    //criar nova compra e coloca-la como pendente
-    
-    console.log(`servico ${data} aguardando para ser realizado`)
+    console.log(`[RabbitMq] [from:Services Dept]: compra ${description} aguardando para ser realizado`)
   }
   
 }

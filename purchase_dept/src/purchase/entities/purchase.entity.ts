@@ -8,17 +8,20 @@ export class Purchase{
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({ nullable: true })
     type: string;
 
     @CreateDateColumn()
     generatedAt: Date;
 
     @Column()
-    status: 'pending' | 'ready' | 'done'
+    status: 'pending' | 'done'
 
     @Column()
     estimated_price: number;
+
+    @Column()
+    description: string;
 
     @ManyToOne(() => Supplier, (supplier) => supplier.purchase)
     supplier: Supplier;
