@@ -5,11 +5,6 @@ import { Purchase } from "src/purchase/entities/purchase.entity";
 
 export class BiddingStrategy implements IPurchaseStrategy{ // acima de 10000
 
-    private responsable: string
-    private quotes: Quote[]
-    private negotiationDay: Date
-    private finalQuote: Quote
-
     private logger = new Logger(BiddingStrategy.name);
     readonly purchaseType = 'BIDDING_BUY';
 

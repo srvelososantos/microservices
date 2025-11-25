@@ -32,7 +32,7 @@ export class RequestController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.requestService.findOne(+id);
+    return this.requestService.findOne(id);
   }
 
   @Patch(':id')

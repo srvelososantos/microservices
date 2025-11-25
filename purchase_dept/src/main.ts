@@ -10,7 +10,13 @@ async function bootstrap() {
     options: {
       urls: ['amqp://guest:guest@localhost:5672'],
       queue: 'queue_services', // fila para se conectar a uma determinada fila e receber mensagens enviadas a ela (consumidor)
-      queueOptions: { durable: false },
+      queueOptions: { 
+        durable: true,
+        arguments: {
+          'x-dead-letter-exchange': '',
+          'x-dead-letter-routing-key': 'queue_services_dlq'
+        }
+      },
     },
   });
 

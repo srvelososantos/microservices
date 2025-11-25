@@ -1,5 +1,23 @@
 version: '3.8'
 services:
+  purchase_dept:
+    build:
+      context: ./purchase_dept
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+  service_dept:
+    build:
+      context: ./purchase_dept
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+  supervision:
+    build:
+      context: ./supervision_dept
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
   rabbitmq:
     image: rabbitmq:3-management
     ports:

@@ -11,11 +11,17 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
         options: {
           urls: ['amqp://guest:guest@localhost:5672'],
           queue: 'queue_supervision',
-          queueOptions: { durable: false },
+          queueOptions: { 
+            durable: true,
+            arguments: {
+              'x-dead-letter-exchange': '',
+              'x-dead-letter-routing-key': 'queue_supervision_dlq'
+            }
+          },
         },
       },
     ]),
   ],
-  exports: [ClientsModule], // <--- Exporta para quem importar este módulo usar
+  exports: [ClientsModule], 
 })
 export class RabbitMqModule {}

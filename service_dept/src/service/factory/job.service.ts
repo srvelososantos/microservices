@@ -7,7 +7,7 @@ export class JobService {
   constructor(private readonly machineFactory: MachineFactory) {}
 
   async executeJob(job: any) {
-    console.log(`Iniciando job para: ${job.machine_type}`);
+    console.log(`Initializing job: ${job.machine_type}`);
 
     try {
       // 1. A Fábrica cria a instância já com os dados dentro
@@ -20,10 +20,10 @@ export class JobService {
 
     } catch (error) {
       if (error.message === 'BREAKDOWN') {
-        console.error('🚨 A MÁQUINA QUEBROU! Enviando mensagem para compras...');
-        // this.rabbitMq.emit(...)
+        console.error('🚨 BROKEN MACHINE!');
+        
       } else {
-        throw error; // Se for outro erro, repassa
+        throw error; 
       }
     }
   }

@@ -16,9 +16,9 @@ export class PurchaseContext {
 
   // Este método encapsula a complexidade da escolha (os IFs ficam só aqui)
   public getStrategy(price: number): IPurchaseStrategy {
-    if (price <= 200) {
+    if (price <= 2000) {
       return this.direct;
-    } else if (price <= 5000) {
+    } else if (price <= 8000) {
       return this.threeQuotes;
     } else {
       return this.bidding;

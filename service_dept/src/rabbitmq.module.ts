@@ -11,7 +11,13 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
         options: {
           urls: ['amqp://guest:guest@localhost:5672'],
           queue: 'queue_services',
-          queueOptions: { durable: false },
+          queueOptions: { 
+          durable: true,
+          arguments: {
+            'x-dead-letter-exchange': '',
+            'x-dead-letter-routing-key': 'queue_services_dlq'
+          }
+        },
         },
       },
     ]),
