@@ -21,13 +21,14 @@ export class AppController {
   }
 
   @EventPattern('notification_created')
-  async processNotification(@Payload() data: number){
-    console.log(`rabbitmq avisou: Chegou notificacao ${data}`)
+  async processNotification(@Payload() job: any){
+    const { deadline, description, location, machineType, status } = job;
 
-    //criar novo serviço e coloca-lo como pendente
+    setTimeout(() => {
+      this.appService.jobExecution(machineType)
+    }, 4000); // 2000 milliseconds = 2 seconds
 
-    
-    console.log(`servico ${data} aguardando para ser realizado`)
+    console.log(`[RabbitMq] [from:Supervision Dept]: servico ${description} aguardando para ser realizado`)
   }
 
   

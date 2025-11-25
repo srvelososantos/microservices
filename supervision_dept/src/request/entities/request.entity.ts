@@ -10,16 +10,13 @@ export class Request {
     deadline: number
 
     @Column()
-    street: string
+    description: string
 
     @Column()
-    number: number
+    location: string
 
-    @Column()
-    zip_code: number
-
-    @Column() //supervisor or another people
-    source: 'supervisor' | 'other'
+    @Column() //FACTORY IMPLEMENTATION 
+    machineType: string
 
     @Column()
     status: 'pending' | 'done'

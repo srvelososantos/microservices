@@ -9,6 +9,7 @@ import { MachineModule } from './machine/machine.module';
 import { DiaryModule } from './diary/diary.module';
 import { RabbitMqModule } from './rabbitmq.module';
 import { MachineSubscriber } from './machine/machine.subscriber';
+import { JobSheetModule } from './service/factory/job-sheet.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { MachineSubscriber } from './machine/machine.subscriber';
     ProfessionalModule,
     MachineModule,
     DiaryModule,
-    RabbitMqModule
+    RabbitMqModule,
+    JobSheetModule
   ],
   controllers: [AppController],
   providers: [AppService, MachineSubscriber],
