@@ -24,12 +24,57 @@ SINGLETON - Utilizado para criação da conexão dos bancos de dados de cada mic
 # DOCKER COMPOSE - docker compose up --build
 
 MICROSERVIÇO COMPRAS - http://localhost:4000
+
 	- GET `/purchases` - LISTA COMPRAS
 	- GET `/purchases/:id` - LISTA COMPRA PELO ID 
+	
 MICROSERVIÇO SERVIÇOS - http://localhost:4001
+
 	- GET `/services` - LISTA SERVIÇOS
 	- GET `/services/:id` - LISTA SERVIÇOS PELO ID
 MICROSERVIÇO FISCALIZAÇÃO - http://localhost:4002
+
 	- POST `/request/new` - NOVA REQUISIÇÃO 
+	nova requisição (fiscalizacao)
+	// 70% para quebrar
+	{
+		"deadline": 15,
+		"description": "rua 2",
+		"location": "rua augusta 12 centro",
+		"machineType": "FRONT_END_LOADER",
+		"status": "pending",
+		"price": 21
+	}
+	
+	// 20% para quebrar
+	{
+		"deadline": 15,
+		"description": "rua 2",
+		"location": "rua augusta 12 centro",
+		"machineType": "BACKHOE",
+		"status": "pending",
+		"price": 21
+	}
+	
+	// 40% para quebrar
+	{
+		"deadline": 15,
+		"description": "rua 2",
+		"location": "rua augusta 12 centro",
+		"machineType": "LAWN_MOWER",
+		"status": "pending",
+		"price": 21
+	}
+	
+	// 10% para quebrar
+	{
+		"deadline": 15,
+		"description": "rua 2",
+		"location": "rua augusta 12 centro",
+		"machineType": "DELIVER_TRUCK",
+		"status": "pending",
+		"price": 21
+	}
 	- GET `/request` - LISTA REQUISIÇÕES
 	- GET `/request/:id` - LISTA REQUISIÇÃO PELO ID
+
