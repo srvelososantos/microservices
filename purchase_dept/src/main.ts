@@ -8,7 +8,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://guest:guest@localhost:5672'],
+      urls: ['amqp://guest:guest@rabbitmq:5672'],
       queue: 'queue_services', // fila para se conectar a uma determinada fila e receber mensagens enviadas a ela (consumidor)
       queueOptions: { 
         durable: true,

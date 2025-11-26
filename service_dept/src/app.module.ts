@@ -20,8 +20,8 @@ import { Service } from './service/entities/service.entity';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5434,
+      host: 'postgres-service',
+      port: 5432,
       database: 'servi_dept',
       username: 'root',
       password: 'rootpassword',
@@ -39,3 +39,4 @@ import { Service } from './service/entities/service.entity';
   providers: [AppService, MachineSubscriber, MachineFactory, ]
 })
 export class AppModule {}
+

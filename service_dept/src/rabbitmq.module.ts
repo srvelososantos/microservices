@@ -1,5 +1,5 @@
-import { Module } from "@nestjs/common";
-import { ClientsModule, Transport } from "@nestjs/microservices";
+import { Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -9,15 +9,17 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
         name: 'SERVICES_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@localhost:5672'],
+          urls: ['amqp://guest:guest@rabbitmq:5672'],
           queue: 'queue_services',
-          queueOptions: { 
-          durable: true,
-          arguments: {
-            'x-dead-letter-exchange': '',
-            'x-dead-letter-routing-key': 'queue_services_dlq'
-          }
-        },
+          queueOptions: {
+            durable: true,
+            arguments: {
+              'x-dead-letter-exchange': '',
+              'x-dead-letter-routing-key': 'queue_services_dlq',
+            },
+          },
+          retryAttempts: 30, // tenta reconectar
+          retryDelay: 5000,
         },
       },
     ]),

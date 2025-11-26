@@ -19,8 +19,8 @@ import { BiddingStrategy } from 'strategies/biddingprStrategy';
     TypeOrmModule.forFeature([Purchase]),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5434,
+      host: 'postgres-purchase',
+      port: 5432,
       database: 'purch_dept',
       username: 'root',
       password: 'rootpassword',

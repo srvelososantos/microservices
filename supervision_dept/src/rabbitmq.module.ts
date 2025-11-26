@@ -9,7 +9,7 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
         name: 'NOTIFICATIONS_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@localhost:5672'],
+          urls: ['amqp://guest:guest@rabbitmq:5672'],
           queue: 'queue_supervision',
           queueOptions: { 
             durable: true,
@@ -18,6 +18,8 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
               'x-dead-letter-routing-key': 'queue_supervision_dlq'
             }
           },
+          retryAttempts: 30,   // tenta reconectar
+          retryDelay: 5000,
         },
       },
     ]),

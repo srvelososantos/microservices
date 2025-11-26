@@ -15,8 +15,8 @@ import { RabbitMqModule } from './rabbitmq.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5434,
+      host: 'postgres-supervisor',
+      port: 5432,
       database: 'super_dept',
       username: 'root',
       password: 'rootpassword',

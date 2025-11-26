@@ -1,32 +1,8 @@
 version: '3.8'
 services:
-  purchase_dept:
-    build:
-      context: ./purchase_dept
-      dockerfile: Dockerfile
-    ports:
-      - "4000:4000"
-  service_dept:
-    build:
-      context: ./purchase_dept
-      dockerfile: Dockerfile
-    ports:
-      - "4001:4001"
-  supervision:
-    build:
-      context: ./supervision_dept
-      dockerfile: Dockerfile
-    ports:
-      - "4002:4002"
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"   # Porta de comunicação
-      - "15672:15672" # Painel de administração (user: guest, pass: guest)
-
-  postgres:
+  postgres-purchase:
     image: postgres:15-alpine
-    container_name: postgres_main
+    container_name: postgres-purchase
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: rootpassword
@@ -36,16 +12,106 @@ services:
       - "5434:5432"
     volumes:
       # Persistência dos dados (para não perder quando reiniciar)
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_purchase_data:/var/lib/postgresql/data
       # A MÁGICA ACONTECE AQUI: Mapeamos o script para a pasta de init
       - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
     networks:
       - minha-rede-microservicos
 
-  # Definição dos volumes e redes
-volumes:
-  postgres_data:
+  postgres-service:
+    image: postgres:15-alpine
+    container_name: postgres-service
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      # Este banco 'postgres' é o padrão, os outros serão criados pelo script
+      POSTGRES_DB: postgres 
+    ports:
+      - "5435:5432"
+    volumes:
+      # Persistência dos dados (para não perder quando reiniciar)
+      - postgres_service_data:/var/lib/postgresql/data
+      # A MÁGICA ACONTECE AQUI: Mapeamos o script para a pasta de init
+      - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    networks:
+      - minha-rede-microservicos
+
+  postgres-supervisor:
+    image: postgres:15-alpine
+    container_name: postgres-supervisor
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpassword
+      # Este banco 'postgres' é o padrão, os outros serão criados pelo script
+      POSTGRES_DB: postgres 
+    ports:
+      - "5436:5432"
+    volumes:
+      # Persistência dos dados (para não perder quando reiniciar)
+      - postgres_supervisor_data:/var/lib/postgresql/data
+      # A MÁGICA ACONTECE AQUI: Mapeamos o script para a pasta de init
+      - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+    networks:
+      - minha-rede-microservicos
+
+  purchase_dept:
+    build:
+      context: ./purchase_dept
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - minha-rede-microservicos
+    depends_on:
+      postgres-purchase:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+  service_dept:
+    build:
+      context: ./service_dept
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    networks:
+      - minha-rede-microservicos
+    depends_on:
+      postgres-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+  supervision_dept:
+    build:
+      context: ./supervision_dept
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    networks:
+      - minha-rede-microservicos
+    depends_on:
+      postgres-supervisor: 
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+              
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # Porta de comunicação
+      - "15672:15672" # Painel de administração (user: guest, pass: guest)
+    networks:
+      - minha-rede-microservicos
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
 
 networks:
   minha-rede-microservicos:
     driver: bridge
+
+volumes:
+  postgres_purchase_data:
+  postgres_service_data:
+  postgres_supervisor_data:
